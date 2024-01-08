@@ -8,7 +8,7 @@ namespace UI
     /// <summary>
     /// A list of windows that need to be open in a given UI state.
     /// </summary>
-    [CreateAssetMenu(fileName = "UIState", menuName = "UI/UI State", order = 0)]
+    [CreateAssetMenu(fileName = "UIState", menuName = "Facticus.UI/UI State", order = 0)]
     public class UiState : ScriptableObject
     {
         [SerializeField] private SerializableValueCallback<WindowsManager> _windowsManagerGetter;
