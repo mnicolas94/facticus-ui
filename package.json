@@ -5,9 +5,7 @@
   "description": "Simple framework for UI management in Unity",
   "unity": "2022.3",
   "unityRelease": "",
-  "dependencies": {
-    "com.brunomikoski.animationsequencer": "0.5.4"
-  },
+  "dependencies": {},
   "keywords": [],
   "author": {
     "name": "Facticus",
