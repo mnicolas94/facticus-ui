@@ -1,7 +1,9 @@
 {
-    "name": "com.{{COMPANY}}.{{REPOSITORY_NAME}}",
+    "name": "com.facticus.ui.Editor",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

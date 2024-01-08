@@ -1,0 +1,29 @@
+{
+    "name": "com.facticus.ui",
+    "rootNamespace": "",
+    "references": [
+        "GUID:375a2b2d1d3bd46ba98f8cd67b6afde6",
+        "GUID:683eb415c59a66c40b09d8cf1710d72f",
+        "GUID:11a2306c728a4b843a652ec6c2f142bc"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.brunomikoski.animationsequencer",
+            "expression": "0.5.4",
+            "define": "ENABLED_ANIMATION_SEQUENCER"
+        },
+        {
+            "name": "com.jnk.tinycontainer",
+            "expression": "1.5.1",
+            "define": "ENABLED_TINY_CONTAINER"
+        }
+    ],
+    "noEngineReferences": false
+}
