@@ -21,7 +21,7 @@
         },
         {
             "name": "com.jnk.tinycontainer",
-            "expression": "1.5.1",
+            "expression": "1.5.2",
             "define": "ENABLED_TINY_CONTAINER"
         }
     ],

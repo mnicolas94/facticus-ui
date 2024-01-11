@@ -6,6 +6,7 @@ using UnityEngine;
 
 namespace UI
 {
+    [DefaultExecutionOrder(-100)]
     public class WindowsManager : MonoBehaviour
     {
         private readonly PrefabsToInstanceMap _windowsInstances = new ();
