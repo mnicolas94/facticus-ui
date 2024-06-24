@@ -13,14 +13,20 @@ namespace UI.Integrations.AnimationSequencer
         
         public async Task Open(CancellationToken ct)
         {
-            _openAnimation.Play();
-            await _openAnimation.PlayingSequence.AsyncWaitForCompletion(ct);
+            if (_openAnimation)
+            {
+                _openAnimation.Play();
+                await _openAnimation.PlayingSequence.AsyncWaitForCompletion(ct);
+            }
         }
 
         public async Task Close(CancellationToken ct)
         {
-            _closeAnimation.Play();
-            await _closeAnimation.PlayingSequence.AsyncWaitForCompletion(ct);
+            if (_closeAnimation)
+            {
+                _closeAnimation.Play();
+                await _closeAnimation.PlayingSequence.AsyncWaitForCompletion(ct);
+            }
         }
     }
 }
