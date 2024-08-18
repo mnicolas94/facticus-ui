@@ -59,6 +59,26 @@ namespace UI
 
             instance.SetActive(false);
         }
+
+        public bool IsOpen(UiState state)
+        {
+            var prefabs = state.WindowsPrefabs;
+            foreach (var windowPrefab in prefabs)
+            {
+                if (!IsOpen(windowPrefab))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private bool IsOpen(GameObject windowPrefab)
+        {
+            var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
+            return instance.activeSelf;
+        }
         
         public async void OpenWindow(GameObject windowPrefab)
         {

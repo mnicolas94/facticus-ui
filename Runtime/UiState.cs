@@ -14,7 +14,10 @@ namespace UI
         [SerializeField] private SerializableValueCallback<WindowsManager> _windowsManagerGetter;
         
         [SerializeField] private List<GameObject> _windowsPrefabs;
+        public IReadOnlyList<GameObject> WindowsPrefabs => _windowsPrefabs.AsReadOnly();
 
+        public bool IsOpen => _windowsManagerGetter.Value.IsOpen(this);
+        
         public void Open(bool closeOthers = true)
         {
             if (closeOthers)
