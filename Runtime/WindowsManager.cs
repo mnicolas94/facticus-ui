@@ -76,8 +76,13 @@ namespace UI
 
         private bool IsOpen(GameObject windowPrefab)
         {
-            var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
-            return instance.activeSelf;
+            if (_windowsInstances.ExistsInstance(windowPrefab))
+            {
+                var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
+                return instance.activeSelf;
+            }
+
+            return false;
         }
         
         public async void OpenWindow(GameObject windowPrefab)
