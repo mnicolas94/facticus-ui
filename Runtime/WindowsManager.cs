@@ -13,28 +13,36 @@ namespace UI
         private readonly Dictionary<GameObject, IWindow> _objectToWindowMap = new ();
         private readonly List<GameObject> _lockedTransitions = new ();
 
-        private CancellationTokenSource _cts;
-
-        private void OnEnable()
+        private GameObject GetWindowsInstance(GameObject windowPrefab)
         {
-            _cts = new CancellationTokenSource();
-        }
-
-        private void OnDisable()
-        {
-            if (!_cts.IsCancellationRequested)
+            var isNew = !_windowsInstances.ExistsInstance(windowPrefab);
+            var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
+            if (isNew)
             {
-                _cts.Cancel();
+                instance.transform.SetParent(transform);
             }
 
-            _cts.Dispose();
-            _cts = null;
+            return instance;
         }
 
+        private bool TryGetWindow(GameObject windowInstance, out IWindow window)
+        {
+            var found = true;
+            if (!_objectToWindowMap.TryGetValue(windowInstance, out window))
+            {
+                found = windowInstance.TryGetComponent(out window);
+                if (found)
+                {
+                    _objectToWindowMap.Add(windowInstance, window);
+                }
+            }
+
+            return found;
+        }
+        
         private async Task OpenWindowTask(GameObject windowPrefab, CancellationToken ct)
         {
-            var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
-            instance.transform.SetParent(transform);
+            var instance = GetWindowsInstance(windowPrefab);
             
             await WaitWindowToBeUnlocked(instance, ct);
             instance.SetActive(true);
@@ -48,7 +56,8 @@ namespace UI
 
         private async Task CloseWindowTask(GameObject windowPrefab, CancellationToken ct)
         {
-            var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
+            var instance = GetWindowsInstance(windowPrefab);
+
             await WaitWindowToBeUnlocked(instance, ct);
             if (TryGetWindow(instance, out var window))
             {
@@ -57,7 +66,18 @@ namespace UI
                 _lockedTransitions.Remove(instance);  // unlock transitions
             }
 
-            instance.SetActive(false);
+            if (instance)  // check if the instance is still alive because it could have been destroyed after closing the app
+            {
+                instance.SetActive(false);
+            }
+        }
+
+        private async Task WaitWindowToBeUnlocked(GameObject windowInstance, CancellationToken ct)
+        {
+            while (_lockedTransitions.Contains(windowInstance) && !ct.IsCancellationRequested)
+            {
+                await Task.Yield();
+            }
         }
 
         public bool IsOpen(UiState state)
@@ -78,7 +98,7 @@ namespace UI
         {
             if (_windowsInstances.ExistsInstance(windowPrefab))
             {
-                var instance = _windowsInstances.GetOrCreateInstance<GameObject>(windowPrefab);
+                var instance = GetWindowsInstance(windowPrefab);
                 return instance.activeSelf;
             }
 
@@ -87,19 +107,30 @@ namespace UI
         
         public async void OpenWindow(GameObject windowPrefab)
         {
-            await OpenWindowTask(windowPrefab, _cts.Token);
+            if (IsOpen(windowPrefab))
+            {
+                return;
+            }
+            
+            await OpenWindowTask(windowPrefab, destroyCancellationToken);
         }
 
         public async void OpenAll(List<GameObject> windowsPrefabs)
         {
-            var ct = _cts.Token;
-            var openTasks = windowsPrefabs.ConvertAll(window => OpenWindowTask(window, ct));
-            await Task.WhenAll(openTasks);
+            foreach (var windowsPrefab in windowsPrefabs)
+            {
+                OpenWindow(windowsPrefab);
+            }
         }
 
         public async void CloseWindow(GameObject windowPrefab)
         {
-            await CloseWindowTask(windowPrefab, _cts.Token);
+            if (!IsOpen(windowPrefab))
+            {
+                return;
+            }
+            
+            await CloseWindowTask(windowPrefab, destroyCancellationToken);
         }
         
         public void CloseAll(List<GameObject> windowsPrefabs)
@@ -121,29 +152,6 @@ namespace UI
             var prefabs = _windowsInstances.GetAllPrefabsOfType<GameObject>();
             var windowsToClose = prefabs.FindAll(windowPrefab => !windowsPrefabs.Contains(windowPrefab));
             CloseAll(windowsToClose);
-        }
-
-        private bool TryGetWindow(GameObject windowInstance, out IWindow window)
-        {
-            var found = true;
-            if (!_objectToWindowMap.TryGetValue(windowInstance, out window))
-            {
-                found = windowInstance.TryGetComponent(out window);
-                if (found)
-                {
-                    _objectToWindowMap.Add(windowInstance, window);
-                }
-            }
-
-            return found;
-        }
-
-        private async Task WaitWindowToBeUnlocked(GameObject windowInstance, CancellationToken ct)
-        {
-            while (_lockedTransitions.Contains(windowInstance) && !ct.IsCancellationRequested)
-            {
-                await Task.Yield();
-            }
         }
     }
 }
