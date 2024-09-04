@@ -16,7 +16,45 @@ namespace UI
         [SerializeField] private List<GameObject> _windowsPrefabs;
         public IReadOnlyList<GameObject> WindowsPrefabs => _windowsPrefabs.AsReadOnly();
 
-        public bool IsOpen => _windowsManagerGetter.Value.IsOpen(this);
+        public bool IsOpen => AreAllInStatus(WindowStatus.Open);
+
+        public bool IsClosed => AreAllInStatus(WindowStatus.Closed);
+        
+        public bool IsOpening => IsAnyInStatus(WindowStatus.Opening);
+
+        public bool IsClosing => IsAnyInStatus(WindowStatus.Closing);
+
+        public bool IsTransitioning => IsOpening || IsClosing;
+
+        private bool AreAllInStatus(WindowStatus status)
+        {
+            var manager = _windowsManagerGetter.Value;
+            foreach (var windowPrefab in _windowsPrefabs)
+            {
+                var isInStatus = manager.GetStatus(windowPrefab) == status;
+                if (!isInStatus)
+                {
+                    return false;
+                }
+            }
+                
+            return true;
+        }
+        
+        private bool IsAnyInStatus(WindowStatus status)
+        {
+            var manager = _windowsManagerGetter.Value;
+            foreach (var windowPrefab in _windowsPrefabs)
+            {
+                var isInStatus = manager.GetStatus(windowPrefab) == status;
+                if (isInStatus)
+                {
+                    return true;
+                }
+            }
+                
+            return false;
+        }
         
         public void Open(bool closeOthers = true)
         {
