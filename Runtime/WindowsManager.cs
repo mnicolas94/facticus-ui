@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using UI.Utils;
 using UnityEngine;
 
 namespace UI
@@ -9,6 +10,7 @@ namespace UI
     public class WindowsManager : MonoBehaviour
     {
         private readonly Dictionary<GameObject, WindowInstance> _instances = new ();
+        private readonly Dictionary<WindowInstance, WindowStatus> _requestsDuringTransition = new ();
 
         private WindowInstance GetWindowsInstance(GameObject windowPrefab)
         {
@@ -29,10 +31,8 @@ namespace UI
             return window;
         }
         
-        private async Task OpenWindowTask(GameObject windowPrefab, CancellationToken ct)
+        private async Task OpenWindowTask(WindowInstance instance, CancellationToken ct)
         {
-            var instance = GetWindowsInstance(windowPrefab);
-            
             instance.Instance.SetActive(true);
             instance.Status = WindowStatus.Opening;
             if (instance.Transitions.HasValue)
@@ -42,10 +42,8 @@ namespace UI
             instance.Status = WindowStatus.Open;
         }
 
-        private async Task CloseWindowTask(GameObject windowPrefab, CancellationToken ct)
+        private async Task CloseWindowTask(WindowInstance instance, CancellationToken ct)
         {
-            var instance = GetWindowsInstance(windowPrefab);
-
             instance.Status = WindowStatus.Closing;
             if (instance.Transitions.HasValue)
             {
@@ -59,13 +57,68 @@ namespace UI
             instance.Status = WindowStatus.Closed;
         }
 
-        private async Task WaitWindowToEndTransition(GameObject windowPrefab, CancellationToken ct)
+        private bool IsTransitioning(WindowInstance instance)
+        {
+            return instance.Status is WindowStatus.Opening or WindowStatus.Closing;
+        }
+
+        private async Task WaitWindowToEndTransition(WindowInstance instance, CancellationToken ct)
+        {
+            while (IsTransitioning(instance) && !ct.IsCancellationRequested)
+            {
+                await Task.Yield();
+            }
+        }
+
+        /// <summary>
+        /// Request that a window should be in a given status after the current transition.
+        /// 
+        /// </summary>
+        /// <param name="windowPrefab"></param>
+        /// <param name="desiredStatus"></param>
+        private async void RequestStatusAfterTransition(GameObject windowPrefab, WindowStatus desiredStatus)
         {
             var instance = GetWindowsInstance(windowPrefab);
 
-            while (instance.Status is WindowStatus.Closing or WindowStatus.Opening && !ct.IsCancellationRequested)
+            if (_requestsDuringTransition.ContainsKey(instance))
             {
-                await Task.Yield();
+                // update the desired final status
+                _requestsDuringTransition[instance] = desiredStatus;
+            }
+            else
+            {
+                // add the request
+                _requestsDuringTransition.Add(instance, desiredStatus);
+                
+                // wait for transition
+                await WaitWindowToEndTransition(instance, destroyCancellationToken);
+                
+                // apply the request
+                _requestsDuringTransition.Remove(instance);
+                await ApplyWindowStatus(instance, desiredStatus);
+            }
+        }
+
+        /// <summary>
+        /// Opens or closes a window give a status.
+        /// </summary>
+        /// <param name="instance"></param>
+        /// <param name="desiredStatus"></param>
+        private async Task ApplyWindowStatus(WindowInstance instance, WindowStatus desiredStatus)
+        {
+            if (desiredStatus == instance.Status)
+            {
+                // the window is already in the desired status
+                return;
+            }
+            
+            if (desiredStatus == WindowStatus.Open)
+            {
+                await OpenWindowTask(instance, destroyCancellationToken);
+            }
+            else if (desiredStatus == WindowStatus.Closed)
+            {
+                await CloseWindowTask(instance, destroyCancellationToken);
             }
         }
 
@@ -82,17 +135,18 @@ namespace UI
         
         public async void OpenWindow(GameObject windowPrefab)
         {
-            // wait for any transition to end
-            await WaitWindowToEndTransition(windowPrefab, destroyCancellationToken);
-            
             var instance = GetWindowsInstance(windowPrefab);
-            if (instance.Status == WindowStatus.Closed)
+            if (IsTransitioning(instance))
             {
-                await OpenWindowTask(windowPrefab, destroyCancellationToken);
+                RequestStatusAfterTransition(windowPrefab, WindowStatus.Open);
+            }
+            else
+            {
+                await ApplyWindowStatus(instance, WindowStatus.Open);
             }
         }
 
-        public async void OpenAll(List<GameObject> windowsPrefabs)
+        public void OpenAll(List<GameObject> windowsPrefabs)
         {
             foreach (var windowsPrefab in windowsPrefabs)
             {
@@ -104,13 +158,14 @@ namespace UI
         {
             if (_instances.ContainsKey(windowPrefab))
             {
-                // wait for any transition to end
-                await WaitWindowToEndTransition(windowPrefab, destroyCancellationToken);
-            
                 var instance = GetWindowsInstance(windowPrefab);
-                if (instance.Status == WindowStatus.Open)
+                if (IsTransitioning(instance))
                 {
-                    await CloseWindowTask(windowPrefab, destroyCancellationToken);
+                    RequestStatusAfterTransition(windowPrefab, WindowStatus.Closed);
+                }
+                else
+                {
+                    await ApplyWindowStatus(instance, WindowStatus.Closed);
                 }
             }
         }
