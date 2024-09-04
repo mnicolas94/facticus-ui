@@ -1,6 +1,6 @@
 {
   "name": "com.facticus.ui",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "displayName": "UI",
   "description": "Simple framework for UI management in Unity",
   "unity": "2022.3",
