@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UI
 {
-    public struct WindowInstance
+    public class WindowInstance
     {
         public GameObject Prefab;
         public GameObject Instance;
