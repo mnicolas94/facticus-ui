@@ -94,8 +94,9 @@ namespace UI
                 await WaitWindowToEndTransition(instance, destroyCancellationToken);
                 
                 // apply the request
+                var lastDesiredStatus = _requestsDuringTransition[instance];
                 _requestsDuringTransition.Remove(instance);
-                await ApplyWindowStatus(instance, desiredStatus);
+                await ApplyWindowStatus(instance, lastDesiredStatus);
             }
         }
 
