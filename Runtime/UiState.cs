@@ -56,12 +56,30 @@ namespace UI
             return false;
         }
         
-        public void Open(bool closeOthers = true)
+        public void Open()
+        {
+            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+        }
+        
+        [Obsolete("Use Open() or OpenCloseOthers()")]
+        public void Open(bool closeOthers)
         {
             if (closeOthers)
             {
                 _windowsManagerGetter.Value.CloseOthers(_windowsPrefabs);
             }
+            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+        }
+
+        public void OpenCloseOthers()
+        {
+            _windowsManagerGetter.Value.CloseOthers(_windowsPrefabs);
+            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+        }
+
+        public void OpenCloseOthersKeepHistory()
+        {
+            _windowsManagerGetter.Value.OpenNewHistoryList();
             _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
         }
 

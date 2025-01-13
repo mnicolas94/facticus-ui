@@ -11,6 +11,19 @@ namespace UI
     {
         private readonly Dictionary<GameObject, WindowInstance> _instances = new ();
         private readonly Dictionary<WindowInstance, WindowStatus> _requestsDuringTransition = new ();
+        private readonly List<List<GameObject>> _openedWindowsHistory = new ();
+
+        private List<GameObject> CurrentOpenedWindows
+        {
+            get
+            {
+                if (_openedWindowsHistory.Count == 0)
+                {
+                    _openedWindowsHistory.Add(new());
+                }
+                return _openedWindowsHistory[^1];
+            }
+        }
 
         private WindowInstance GetWindowsInstance(GameObject windowPrefab)
         {
@@ -30,8 +43,21 @@ namespace UI
 
             return window;
         }
+
+        public WindowStatus GetStatus(GameObject windowPrefab)
+        {
+            if (_instances.ContainsKey(windowPrefab))
+            {
+                var instance = GetWindowsInstance(windowPrefab);
+                return instance.Status;
+            }
+            
+            return WindowStatus.Closed;
+        }
         
-        private async Task OpenWindowTask(WindowInstance instance, CancellationToken ct)
+#region Transitions
+        
+        private async Task TransitionToOpenStatus(WindowInstance instance, CancellationToken ct)
         {
             instance.Instance.SetActive(true);
             instance.Status = WindowStatus.Opening;
@@ -42,7 +68,7 @@ namespace UI
             instance.Status = WindowStatus.Open;
         }
 
-        private async Task CloseWindowTask(WindowInstance instance, CancellationToken ct)
+        private async Task TransitionToCloseStatus(WindowInstance instance, CancellationToken ct)
         {
             instance.Status = WindowStatus.Closing;
             if (instance.Transitions.HasValue)
@@ -101,7 +127,7 @@ namespace UI
         }
 
         /// <summary>
-        /// Opens or closes a window give a status.
+        /// Opens or closes a window given a status.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="desiredStatus"></param>
@@ -115,28 +141,71 @@ namespace UI
             
             if (desiredStatus == WindowStatus.Open)
             {
-                await OpenWindowTask(instance, destroyCancellationToken);
+                await TransitionToOpenStatus(instance, destroyCancellationToken);
             }
             else if (desiredStatus == WindowStatus.Closed)
             {
-                await CloseWindowTask(instance, destroyCancellationToken);
+                await TransitionToCloseStatus(instance, destroyCancellationToken);
             }
         }
 
-        public WindowStatus GetStatus(GameObject windowPrefab)
+#endregion
+
+#region History management
+
+        private void AddToHistory(GameObject windowPrefab)
         {
-            if (_instances.ContainsKey(windowPrefab))
+            if (!CurrentOpenedWindows.Contains(windowPrefab))
             {
-                var instance = GetWindowsInstance(windowPrefab);
-                return instance.Status;
+                CurrentOpenedWindows.Add(windowPrefab);
+            }
+        }
+
+        private void RemoveFromHistory(GameObject windowPrefab)
+        {
+            if (CurrentOpenedWindows.Contains(windowPrefab))
+            {
+                CurrentOpenedWindows.Remove(windowPrefab);
+            }
+        }
+
+        public void OpenNewHistoryList()
+        {
+            // store current windows in temporal list to close them after we open a new history list
+            var currentOpenedWindows = CurrentOpenedWindows;
+            
+            // add empty history list first
+            _openedWindowsHistory.Add(new List<GameObject>());
+            
+            // close currently opened windows.
+            // they won't be removed from the history since the current list is the new one
+            CloseAll(currentOpenedWindows);
+        }
+
+        public void CloseCurrentHistoryList()
+        {
+            // close current history list
+            CloseAll(CurrentOpenedWindows);
+
+            // remove last list from history
+            if (_openedWindowsHistory.Count > 0)
+            {
+                _openedWindowsHistory.RemoveAt(_openedWindowsHistory.Count - 1);
             }
             
-            return WindowStatus.Closed;
+            // open the previous list in history
+            OpenAll(CurrentOpenedWindows);
         }
+
+#endregion
         
         public async void OpenWindow(GameObject windowPrefab)
         {
+            // add prefab to list of opened
+            AddToHistory(windowPrefab);
+
             var instance = GetWindowsInstance(windowPrefab);
+            
             if (IsTransitioning(instance))
             {
                 RequestStatusAfterTransition(windowPrefab, WindowStatus.Open);
@@ -159,6 +228,9 @@ namespace UI
         {
             if (_instances.ContainsKey(windowPrefab))
             {
+                // remove from list of opened windows
+                RemoveFromHistory(windowPrefab);
+                
                 var instance = GetWindowsInstance(windowPrefab);
                 if (IsTransitioning(instance))
                 {
@@ -170,7 +242,7 @@ namespace UI
                 }
             }
         }
-        
+
         public void CloseAll(List<GameObject> windowsPrefabs)
         {
             foreach (var windowPrefab in windowsPrefabs)
