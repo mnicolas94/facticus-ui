@@ -9,6 +9,22 @@ namespace UI
     [DefaultExecutionOrder(-100)]
     public class WindowsManager : MonoBehaviour
     {
+        private static WindowsManager _instance;
+        public static WindowsManager Instance
+        {
+            get
+            {
+                if (!_instance)
+                {
+                    var go = new GameObject("Windows Manager");
+                    _instance = go.AddComponent<WindowsManager>();
+                    DontDestroyOnLoad(go);
+                }
+
+                return _instance;
+            }
+        }
+
         private readonly Dictionary<GameObject, WindowInstance> _instances = new ();
         private readonly Dictionary<WindowInstance, WindowStatus> _requestsDuringTransition = new ();
         private readonly List<List<GameObject>> _openedWindowsHistory = new ();
@@ -184,8 +200,10 @@ namespace UI
 
         public void CloseCurrentHistoryList()
         {
+            // create a temporal list to avoid modifying CurrenOpenedWindows list when a window is closed
+            var temp = new List<GameObject>(CurrentOpenedWindows);
             // close current history list
-            CloseAll(CurrentOpenedWindows);
+            CloseAll(temp);
 
             // remove last list from history
             if (_openedWindowsHistory.Count > 0)

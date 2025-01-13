@@ -11,8 +11,6 @@ namespace UI
     [CreateAssetMenu(fileName = "UIState", menuName = "Facticus.UI/UI State", order = 0)]
     public class UiState : ScriptableObject
     {
-        [SerializeField] private SerializableValueCallback<WindowsManager> _windowsManagerGetter;
-        
         [SerializeField] private List<GameObject> _windowsPrefabs;
         public IReadOnlyList<GameObject> WindowsPrefabs => _windowsPrefabs.AsReadOnly();
 
@@ -28,7 +26,7 @@ namespace UI
 
         private bool AreAllInStatus(WindowStatus status)
         {
-            var manager = _windowsManagerGetter.Value;
+            var manager = WindowsManager.Instance;
             foreach (var windowPrefab in _windowsPrefabs)
             {
                 var isInStatus = manager.GetStatus(windowPrefab) == status;
@@ -43,7 +41,7 @@ namespace UI
         
         private bool IsAnyInStatus(WindowStatus status)
         {
-            var manager = _windowsManagerGetter.Value;
+            var manager = WindowsManager.Instance;
             foreach (var windowPrefab in _windowsPrefabs)
             {
                 var isInStatus = manager.GetStatus(windowPrefab) == status;
@@ -58,34 +56,46 @@ namespace UI
         
         public void Open()
         {
-            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+            WindowsManager.Instance.OpenAll(_windowsPrefabs);
         }
         
         [Obsolete("Use Open() or OpenCloseOthers()")]
         public void Open(bool closeOthers)
         {
+            var windowsManager = WindowsManager.Instance;
             if (closeOthers)
             {
-                _windowsManagerGetter.Value.CloseOthers(_windowsPrefabs);
+                windowsManager.CloseOthers(_windowsPrefabs);
             }
-            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+            windowsManager.OpenAll(_windowsPrefabs);
         }
 
         public void OpenCloseOthers()
         {
-            _windowsManagerGetter.Value.CloseOthers(_windowsPrefabs);
-            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+            var windowsManager = WindowsManager.Instance;
+            windowsManager.CloseOthers(_windowsPrefabs);
+            windowsManager.OpenAll(_windowsPrefabs);
         }
 
         public void OpenCloseOthersKeepHistory()
         {
-            _windowsManagerGetter.Value.OpenNewHistoryList();
-            _windowsManagerGetter.Value.OpenAll(_windowsPrefabs);
+            var windowsManager = WindowsManager.Instance;
+            windowsManager.OpenNewHistoryList();
+            windowsManager.OpenAll(_windowsPrefabs);
+        }
+
+        /// <summary>
+        /// This is a useful method to access WindowsManager.CloseCurrentHistoryList() method, but it is not
+        /// tied to this class' particular instance.
+        /// </summary>
+        public void CloseGoBackHistory()
+        {
+            WindowsManager.Instance.CloseCurrentHistoryList();
         }
 
         public void Close()
         {
-            _windowsManagerGetter.Value.CloseAll(_windowsPrefabs);
+            WindowsManager.Instance.CloseAll(_windowsPrefabs);
         }
     }
 }
