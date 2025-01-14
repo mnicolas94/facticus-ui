@@ -123,6 +123,8 @@ namespace UI
                 // the window is already in the desired status
                 return;
             }
+
+            instance.RequestedStatus = desiredStatus;
             
             if (desiredStatus == WindowStatus.Open)
             {
@@ -133,7 +135,7 @@ namespace UI
                 await TransitionToCloseStatus(instance, destroyCancellationToken);
             }
 
-            if (instance.RequestedStatus.HasValue && instance.Status != instance.RequestedStatus)
+            if (instance.Status != instance.RequestedStatus)
             {
                 // during the transition, a different status was requested 
                 ResolveRequestedStatus(instance);
