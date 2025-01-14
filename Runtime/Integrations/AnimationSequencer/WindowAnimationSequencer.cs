@@ -1,7 +1,7 @@
 ﻿#if ENABLED_ANIMATION_SEQUENCER
 using System.Threading;
-using System.Threading.Tasks;
 using BrunoMikoski.AnimationSequencer;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace UI.Integrations.AnimationSequencer
@@ -11,7 +11,7 @@ namespace UI.Integrations.AnimationSequencer
         [SerializeField] private AnimationSequencerController _openAnimation;
         [SerializeField] private AnimationSequencerController _closeAnimation;
         
-        public async Task Open(CancellationToken ct)
+        public async UniTask Open(CancellationToken ct)
         {
             if (_openAnimation)
             {
@@ -20,7 +20,7 @@ namespace UI.Integrations.AnimationSequencer
             }
         }
 
-        public async Task Close(CancellationToken ct)
+        public async UniTask Close(CancellationToken ct)
         {
             if (_closeAnimation)
             {

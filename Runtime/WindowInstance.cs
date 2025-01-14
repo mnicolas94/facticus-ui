@@ -1,5 +1,4 @@
-﻿using System;
-using UI.Utils;
+﻿using UI.Utils;
 using UnityEngine;
 
 namespace UI

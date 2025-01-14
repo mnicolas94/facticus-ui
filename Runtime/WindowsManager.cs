@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using UI.Utils;
 using UnityEngine;
 
@@ -72,7 +72,7 @@ namespace UI
         
 #region Transitions
         
-        private async Task TransitionToOpenStatus(WindowInstance instance, CancellationToken ct)
+        private async UniTask TransitionToOpenStatus(WindowInstance instance, CancellationToken ct)
         {
             instance.Instance.SetActive(true);
             instance.Status = WindowStatus.Opening;
@@ -83,7 +83,7 @@ namespace UI
             instance.Status = WindowStatus.Open;
         }
 
-        private async Task TransitionToCloseStatus(WindowInstance instance, CancellationToken ct)
+        private async UniTask TransitionToCloseStatus(WindowInstance instance, CancellationToken ct)
         {
             instance.Status = WindowStatus.Closing;
             if (instance.Transitions.HasValue)
@@ -103,11 +103,11 @@ namespace UI
             return instance.Status is WindowStatus.Opening or WindowStatus.Closing;
         }
 
-        private async Task WaitWindowToEndTransition(WindowInstance instance, CancellationToken ct)
+        private async UniTask WaitWindowToEndTransition(WindowInstance instance, CancellationToken ct)
         {
             while (IsTransitioning(instance) && !ct.IsCancellationRequested)
             {
-                await Task.Yield();
+                await UniTask.Yield();
             }
         }
 
@@ -116,7 +116,7 @@ namespace UI
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="desiredStatus"></param>
-        private async Task TransitionToStatus(WindowInstance instance, WindowStatus desiredStatus)
+        private async UniTask TransitionToStatus(WindowInstance instance, WindowStatus desiredStatus)
         {
             if (desiredStatus == instance.Status)
             {

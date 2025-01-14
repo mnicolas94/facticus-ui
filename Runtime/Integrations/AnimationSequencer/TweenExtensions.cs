@@ -1,13 +1,13 @@
 ﻿#if ENABLED_ANIMATION_SEQUENCER
 using System.Threading;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
 namespace UI.Integrations.AnimationSequencer
 {
     public static class TweenExtensions
     {
-        public static async Task AsyncWaitForCompletion(this Tween t, CancellationToken ct)
+        public static async UniTask AsyncWaitForCompletion(this Tween t, CancellationToken ct)
         {
             if (!t.active)
             {
@@ -16,7 +16,7 @@ namespace UI.Integrations.AnimationSequencer
 
             while (t.active && !t.IsComplete() && !ct.IsCancellationRequested)
             {
-                await Task.Yield();
+                await UniTask.Yield();
             }
 
             if (ct.IsCancellationRequested)

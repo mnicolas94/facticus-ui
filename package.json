@@ -5,7 +5,9 @@
   "description": "Simple framework for UI management in Unity",
   "unity": "2022.3",
   "unityRelease": "",
-  "dependencies": {},
+  "dependencies": {
+    "com.cysharp.unitask": "2.5.10"
+  },
   "keywords": [],
   "author": {
     "name": "Facticus",
