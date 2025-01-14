@@ -26,7 +26,6 @@ namespace UI
         }
 
         private readonly Dictionary<GameObject, WindowInstance> _instances = new ();
-        private readonly Dictionary<WindowInstance, WindowStatus> _requestsDuringTransition = new ();
         private readonly List<List<GameObject>> _openedWindowsHistory = new ();
 
         private List<GameObject> CurrentOpenedWindows
@@ -113,41 +112,11 @@ namespace UI
         }
 
         /// <summary>
-        /// Request that a window should be in a given status after the current transition.
-        /// 
-        /// </summary>
-        /// <param name="windowPrefab"></param>
-        /// <param name="desiredStatus"></param>
-        private async void RequestStatusAfterTransition(GameObject windowPrefab, WindowStatus desiredStatus)
-        {
-            var instance = GetWindowsInstance(windowPrefab);
-
-            if (_requestsDuringTransition.ContainsKey(instance))
-            {
-                // update the desired final status
-                _requestsDuringTransition[instance] = desiredStatus;
-            }
-            else
-            {
-                // add the request
-                _requestsDuringTransition.Add(instance, desiredStatus);
-                
-                // wait for transition
-                await WaitWindowToEndTransition(instance, destroyCancellationToken);
-                
-                // apply the request
-                var lastDesiredStatus = _requestsDuringTransition[instance];
-                _requestsDuringTransition.Remove(instance);
-                await ApplyWindowStatus(instance, lastDesiredStatus);
-            }
-        }
-
-        /// <summary>
         /// Opens or closes a window given a status.
         /// </summary>
         /// <param name="instance"></param>
         /// <param name="desiredStatus"></param>
-        private async Task ApplyWindowStatus(WindowInstance instance, WindowStatus desiredStatus)
+        private async Task TransitionToStatus(WindowInstance instance, WindowStatus desiredStatus)
         {
             if (desiredStatus == instance.Status)
             {
@@ -163,8 +132,18 @@ namespace UI
             {
                 await TransitionToCloseStatus(instance, destroyCancellationToken);
             }
+
+            if (instance.RequestedStatus.HasValue && instance.Status != instance.RequestedStatus)
+            {
+                // during the transition, a different status was requested 
+                ResolveRequestedStatus(instance);
+            }
         }
 
+        private async void ResolveRequestedStatus(WindowInstance instance)
+        {
+            await TransitionToStatus(instance, instance.RequestedStatus);
+        }
 #endregion
 
 #region History management
@@ -226,11 +205,12 @@ namespace UI
             
             if (IsTransitioning(instance))
             {
-                RequestStatusAfterTransition(windowPrefab, WindowStatus.Open);
+                // request to open window when transition ends
+                instance.RequestedStatus = WindowStatus.Open;
             }
             else
             {
-                await ApplyWindowStatus(instance, WindowStatus.Open);
+                await TransitionToStatus(instance, WindowStatus.Open);
             }
         }
 
@@ -252,11 +232,12 @@ namespace UI
                 var instance = GetWindowsInstance(windowPrefab);
                 if (IsTransitioning(instance))
                 {
-                    RequestStatusAfterTransition(windowPrefab, WindowStatus.Closed);
+                    // request to close window when transition ends
+                    instance.RequestedStatus = WindowStatus.Closed;
                 }
                 else
                 {
-                    await ApplyWindowStatus(instance, WindowStatus.Closed);
+                    await TransitionToStatus(instance, WindowStatus.Closed);
                 }
             }
         }

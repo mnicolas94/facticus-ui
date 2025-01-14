@@ -8,7 +8,14 @@ namespace UI
     {
         public GameObject Prefab;
         public GameObject Instance;
+        /// <summary>
+        /// Current status
+        /// </summary>
         public WindowStatus Status;
+        /// <summary>
+        /// Last status requested. It may be different from the current status if a transition is in progress.
+        /// </summary>
+        public Option<WindowStatus> RequestedStatus;
         public Option<IWindow> Transitions;
     }
 }
