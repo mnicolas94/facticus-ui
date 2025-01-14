@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace UI
 {
-    public interface IWindow
+    public interface IWindowTransitions
     {
         UniTask Open(CancellationToken ct);
         UniTask Close(CancellationToken ct);

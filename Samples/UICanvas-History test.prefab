@@ -480,7 +480,7 @@ GameObject:
   - component: {fileID: 5152656302897081555}
   - component: {fileID: 1391086709164390859}
   m_Layer: 5
-  m_Name: UICanvas-2
+  m_Name: UICanvas-History test
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -15,6 +15,6 @@ namespace UI
         /// Last status requested. It may be different from the current status if a transition is in progress.
         /// </summary>
         public WindowStatus RequestedStatus;
-        public Option<IWindow> Transitions;
+        public Option<IWindowTransitions> Transitions;
     }
 }

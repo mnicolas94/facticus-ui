@@ -39,24 +39,29 @@ namespace UI
                 return _openedWindowsHistory[^1];
             }
         }
-
+        
         private WindowInstance GetWindowsInstance(GameObject windowPrefab)
         {
-            if (!_instances.TryGetValue(windowPrefab, out var window))
+            if (!TryGetWindowInstance(windowPrefab, out var window))
             {
                 var instance = Instantiate(windowPrefab, transform);
-                instance.TryGetComponent(out IWindow transitions);
+                instance.TryGetComponent(out IWindowTransitions transitions);
                 window = new WindowInstance()
                 {
                     Prefab = windowPrefab,
                     Instance = instance,
                     Status = WindowStatus.Closed,
-                    Transitions = new Option<IWindow>(transitions)
+                    Transitions = new Option<IWindowTransitions>(transitions)
                 };
                 _instances.Add(windowPrefab, window);
             }
 
             return window;
+        }
+
+        public bool TryGetWindowInstance(GameObject windowPrefab, out WindowInstance window)
+        {
+            return _instances.TryGetValue(windowPrefab, out window);
         }
 
         public WindowStatus GetStatus(GameObject windowPrefab)

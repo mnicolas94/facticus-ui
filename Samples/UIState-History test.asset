@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40bab3c281b746d2a8a34d18e8eb6824, type: 3}
-  m_Name: UIState-2
+  m_Name: UIState-History test
   m_EditorClassIdentifier: 
   _windowsPrefabs:
   - {fileID: 6670817566598976069, guid: 7bd4e2acd463e9a4e8a2a2d3dec30814, type: 3}

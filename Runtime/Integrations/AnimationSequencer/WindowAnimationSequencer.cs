@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace UI.Integrations.AnimationSequencer
 {
-    public class WindowAnimationSequencer : MonoBehaviour, IWindow
+    public class WindowAnimationSequencer : MonoBehaviour, IWindowTransitions
     {
         [SerializeField] private AnimationSequencerController _openAnimation;
         [SerializeField] private AnimationSequencerController _closeAnimation;
