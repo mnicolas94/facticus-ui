@@ -1,9 +1,10 @@
 ﻿#if ENABLED_LOCALIZATION
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
 using UnityEngine.Localization;
 using UnityEngine.Localization.Components;
 
-namespace UI.Popups
+namespace Facticus.UI.Popups
 {
     public class PopupMessageLocalized : PopupSimple, IWindowInitializable<LocalizedString>
     {

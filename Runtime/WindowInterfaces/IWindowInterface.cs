@@ -1,4 +1,4 @@
-﻿namespace UI
+﻿namespace Facticus.UI.WindowInterfaces
 {
     /// <summary>
     /// An interface from which every windows interface should extend. It is used to avoid boxing when adding interfaces

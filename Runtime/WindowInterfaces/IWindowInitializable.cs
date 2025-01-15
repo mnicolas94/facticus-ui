@@ -1,4 +1,4 @@
-﻿namespace UI
+﻿namespace Facticus.UI.WindowInterfaces
 {
     /// <summary>
     /// A window that can be initialized. Used with <see cref="UiStatePrefabGroup.Open{T}"/> and <see cref="UiStatePrefabGroup.OpenWaitResult{T1, T2}"/>

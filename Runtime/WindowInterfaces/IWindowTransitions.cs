@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace UI
+namespace Facticus.UI.WindowInterfaces
 {
     public interface IWindowTransitions : IWindowInterface
     {

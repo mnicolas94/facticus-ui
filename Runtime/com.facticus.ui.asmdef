@@ -1,6 +1,6 @@
 {
     "name": "com.facticus.ui",
-    "rootNamespace": "",
+    "rootNamespace": "Facticus",
     "references": [
         "GUID:375a2b2d1d3bd46ba98f8cd67b6afde6",
         "GUID:683eb415c59a66c40b09d8cf1710d72f",

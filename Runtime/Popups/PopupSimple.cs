@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UI.Utils;
+using Facticus.UI.Utils;
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Popups
+namespace Facticus.UI.Popups
 {
     public class PopupSimple : MonoBehaviour, IWindowPopup
     {

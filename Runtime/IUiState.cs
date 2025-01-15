@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
+using Void = Facticus.UI.WindowInterfaces.Void;
 
-namespace UI
+namespace Facticus.UI
 {
     /// <summary>
     /// A state of the user interface. It is used to open and close windows in a given state.

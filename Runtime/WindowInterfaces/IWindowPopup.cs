@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace UI
+namespace Facticus.UI.WindowInterfaces
 {
     /// <summary>
     /// Same as <see cref="IWindowWithResult{T}"/> but it returns nothing.

@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace UI.Utils
+namespace Facticus.UI.Utils
 {
     public class PrefabsToInstanceMap
     {

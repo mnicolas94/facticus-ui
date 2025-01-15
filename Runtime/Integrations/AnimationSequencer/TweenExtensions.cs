@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 
-namespace UI.Integrations.AnimationSequencer
+namespace Facticus.UI.Integrations.AnimationSequencer
 {
     public static class TweenExtensions
     {

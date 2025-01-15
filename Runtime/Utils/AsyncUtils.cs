@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine.UI;
 
-namespace UI.Utils
+namespace Facticus.UI.Utils
 {
     public static class AsyncUtils
     {

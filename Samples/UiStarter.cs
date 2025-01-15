@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Facticus.UI;
+using UnityEngine;
 
 namespace UI.Samples
 {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace UI
+namespace Facticus.UI
 {
     public class InteractionsDisabler : MonoBehaviour
     {

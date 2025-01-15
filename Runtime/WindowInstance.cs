@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using UI.Utils;
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
 
-namespace UI
+namespace Facticus.UI
 {
     public class WindowInstance
     {

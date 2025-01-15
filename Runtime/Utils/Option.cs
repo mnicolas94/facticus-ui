@@ -1,4 +1,4 @@
-﻿namespace UI.Utils
+﻿namespace Facticus.UI.Utils
 {
     public struct Option<T>
     {

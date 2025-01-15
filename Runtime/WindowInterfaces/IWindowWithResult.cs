@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
 
-namespace UI
+namespace Facticus.UI.WindowInterfaces
 {
     /// <summary>
     /// A window that returns a result of type T after it's closed. It is meant to be used with

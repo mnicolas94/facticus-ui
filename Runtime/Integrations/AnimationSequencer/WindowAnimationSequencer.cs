@@ -2,9 +2,10 @@
 using System.Threading;
 using BrunoMikoski.AnimationSequencer;
 using Cysharp.Threading.Tasks;
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
 
-namespace UI.Integrations.AnimationSequencer
+namespace Facticus.UI.Integrations.AnimationSequencer
 {
     public class WindowAnimationSequencer : MonoBehaviour, IWindowTransitions
     {

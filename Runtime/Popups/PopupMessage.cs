@@ -1,8 +1,9 @@
 ﻿#if ENABLED_TEXTMESHPRO
+using Facticus.UI.WindowInterfaces;
 using TMPro;
 using UnityEngine;
 
-namespace UI.Popups
+namespace Facticus.UI.Popups
 {
     public class PopupMessage : PopupSimple, IWindowInitializable<string>
     {

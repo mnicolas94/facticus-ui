@@ -1,4 +1,4 @@
-﻿namespace UI
+﻿namespace Facticus.UI
 {
     public class UiStateOpenInfo
     {

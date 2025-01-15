@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI
+namespace Facticus.UI
 {
     /// <summary>
     /// A list of windows to be open in a given UI state.

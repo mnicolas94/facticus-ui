@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace UI
+namespace Facticus.UI
 {
     /// <summary>
     /// A component meant to be attached to window prefab in order to be able to open them individually with

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UI.Utils;
+using Facticus.UI.WindowInterfaces;
 using UnityEngine;
 
-namespace UI
+namespace Facticus.UI
 {
     [DefaultExecutionOrder(-100)]
     public class WindowsManager : MonoBehaviour

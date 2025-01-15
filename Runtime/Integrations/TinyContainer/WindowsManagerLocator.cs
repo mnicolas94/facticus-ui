@@ -1,7 +1,7 @@
 ﻿#if ENABLED_TINY_CONTAINER
 using UnityEngine;
 
-namespace UI.Integrations.TinyContainer
+namespace Facticus.UI.Integrations.TinyContainer
 {
     [CreateAssetMenu(fileName = "WindowsManagerLocator", menuName = "Facticus.UI/WindowsManagerLocator", order = 0)]
     public class WindowsManagerLocator : ScriptableObject
