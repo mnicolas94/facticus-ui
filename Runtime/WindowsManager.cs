@@ -45,14 +45,13 @@ namespace UI
             if (!TryGetWindowInstance(windowPrefab, out var window))
             {
                 var instance = Instantiate(windowPrefab, transform);
-                instance.TryGetComponent(out IWindowTransitions transitions);
                 window = new WindowInstance()
                 {
                     Prefab = windowPrefab,
                     Instance = instance,
                     Status = WindowStatus.Closed,
-                    Transitions = new Option<IWindowTransitions>(transitions)
                 };
+                
                 _instances.Add(windowPrefab, window);
             }
 
@@ -81,9 +80,9 @@ namespace UI
         {
             instance.Instance.SetActive(true);
             instance.Status = WindowStatus.Opening;
-            if (instance.Transitions.HasValue)
+            if (instance.TryGetWindowInterface(out IWindowTransitions transitionsInterface))
             {
-                await instance.Transitions.Value.Open(ct);
+                await transitionsInterface.Open(ct);
             }
             instance.Status = WindowStatus.Open;
         }
@@ -91,9 +90,9 @@ namespace UI
         private async UniTask TransitionToCloseStatus(WindowInstance instance, CancellationToken ct)
         {
             instance.Status = WindowStatus.Closing;
-            if (instance.Transitions.HasValue)
+            if (instance.TryGetWindowInterface(out IWindowTransitions transitionsInterface))
             {
-                await instance.Transitions.Value.Close(ct);
+                await transitionsInterface.Close(ct);
             }
 
             if (instance.Instance)  // check if the instance is still alive because it could have been destroyed after closing the app

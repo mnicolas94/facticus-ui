@@ -8,7 +8,7 @@ namespace UI
     /// <see cref="UiState.OpenWaitResult{T}"/> and <see cref="UiState.OpenWaitResult{T1, T2}"/>
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public interface IWindowWithResult<T>
+    public interface IWindowWithResult<T> : IWindowInterface
     {
         UniTask<T> WaitForResult(CancellationToken ct);
     }

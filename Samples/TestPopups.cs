@@ -31,7 +31,7 @@ namespace UI.Samples
             // wait popup
             if (WindowsManager.Instance.TryGetWindowInstance(popupPrefab, out var windowInstance))
             {
-                if (windowInstance.Instance.TryGetComponent<IWindowPopup>(out var windowWithResult))
+                if (windowInstance.TryGetWindowInterface<IWindowPopup>(out var windowWithResult))
                 {
                     await windowWithResult.WaitPopup(destroyCancellationToken);
                 }
@@ -51,13 +51,13 @@ namespace UI.Samples
             if (WindowsManager.Instance.TryGetWindowInstance(popupPrefab, out var windowInstance))
             {
                 // initialize
-                if (windowInstance.Instance.TryGetComponent<IWindowInitializable<string>>(out var windowInitializable))
+                if (windowInstance.TryGetWindowInterface<IWindowInitializable<string>>(out var windowInitializable))
                 {
                     windowInitializable.Initialize(_inputField.text);
                 }
                 
                 // wait popup
-                if (windowInstance.Instance.TryGetComponent<IWindowPopup>(out var windowWithResult))
+                if (windowInstance.TryGetWindowInterface<IWindowPopup>(out var windowWithResult))
                 {
                     await windowWithResult.WaitPopup(destroyCancellationToken);
                 }
