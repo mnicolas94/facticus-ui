@@ -4,11 +4,14 @@ namespace UI.Samples
 {
     public class UiStarter : MonoBehaviour
     {
-        [SerializeField] private UiState _uiState;
+        [SerializeField] private UiStatePrefabGroup _uiState;
         
         private void Start()
         {
-            _uiState.Open();
+            _uiState.Open(new UiStateOpenInfo()
+            {
+                
+            });
         }
     }
 }

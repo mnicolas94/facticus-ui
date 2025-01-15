@@ -8,6 +8,8 @@ namespace UI.Samples
 {
     public class TestPopups : MonoBehaviour
     {
+        [SerializeField] private UiStatePrefab _simplePopupStatePrefab;
+        [SerializeField] private UiStatePrefab _messagePopupStatePrefab;
         [SerializeField] private PopupSimple _simplePopup;
         [SerializeField] private PopupMessage _messagePopup;
         
@@ -23,47 +25,12 @@ namespace UI.Samples
 
         private async void OpenPopupSimple()
         {
-            var popupPrefab = _simplePopup.gameObject;
-            var windowsManager = WindowsManager.Instance;
-            windowsManager.OpenNewHistoryList();
-            windowsManager.OpenWindow(popupPrefab);
-            
-            // wait popup
-            if (WindowsManager.Instance.TryGetWindowInstance(popupPrefab, out var windowInstance))
-            {
-                if (windowInstance.TryGetWindowInterface<IWindowPopup>(out var windowWithResult))
-                {
-                    await windowWithResult.WaitPopup(destroyCancellationToken);
-                }
-            }
-            
-            windowsManager.CloseCurrentHistoryList();
+            await _simplePopupStatePrefab.OpenAsPopup(UiStateOpenInfo.Keep, destroyCancellationToken);
         }
         
         private async void OpenPopupMessage()
         {
-            var popupPrefab = _messagePopup.gameObject;
-            
-            var windowsManager = WindowsManager.Instance;
-            windowsManager.OpenNewHistoryList();
-            windowsManager.OpenWindow(popupPrefab);
-            
-            if (WindowsManager.Instance.TryGetWindowInstance(popupPrefab, out var windowInstance))
-            {
-                // initialize
-                if (windowInstance.TryGetWindowInterface<IWindowInitializable<string>>(out var windowInitializable))
-                {
-                    windowInitializable.Initialize(_inputField.text);
-                }
-                
-                // wait popup
-                if (windowInstance.TryGetWindowInterface<IWindowPopup>(out var windowWithResult))
-                {
-                    await windowWithResult.WaitPopup(destroyCancellationToken);
-                }
-            }
-            
-            windowsManager.CloseCurrentHistoryList();
+            await _messagePopupStatePrefab.OpenAsPopup(_inputField.text, UiStateOpenInfo.Keep, destroyCancellationToken);
         }
     }
 }

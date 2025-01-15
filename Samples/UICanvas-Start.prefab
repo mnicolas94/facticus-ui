@@ -1197,6 +1197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 205a2d5de6f64fd68d7f11f96be97018, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _simplePopupStatePrefab: {fileID: 8410939509827957748, guid: ed0f387f029ee56418bf2ad3cc1515f1, type: 3}
+  _messagePopupStatePrefab: {fileID: 7421373002460624753, guid: 4f20d885bb438db4d9084c41bf06b148, type: 3}
   _simplePopup: {fileID: 8993556578838658404, guid: ed0f387f029ee56418bf2ad3cc1515f1, type: 3}
   _messagePopup: {fileID: 353735876492998601, guid: 4f20d885bb438db4d9084c41bf06b148, type: 3}
   _simplePopupButton: {fileID: 625048083904771571}
