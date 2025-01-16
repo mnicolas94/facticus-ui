@@ -2,29 +2,18 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Facticus.UI.WindowInterfaces;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
+using Utils;
 
 namespace Facticus.UI
 {
     [DefaultExecutionOrder(-100)]
-    public class WindowsManager : MonoBehaviour
+    public class WindowsManager : ScriptableObjectSingleton<WindowsManager>
     {
-        private static WindowsManager _instance;
-        public static WindowsManager Instance
-        {
-            get
-            {
-                if (!_instance)
-                {
-                    var go = new GameObject("Windows Manager");
-                    _instance = go.AddComponent<WindowsManager>();
-                    DontDestroyOnLoad(go);
-                }
-
-                return _instance;
-            }
-        }
-
+        private Transform _defaultParentTransform;
         private readonly Dictionary<GameObject, WindowInstance> _instances = new ();
         private readonly List<List<GameObject>> _openedWindowsHistory = new ();
 
@@ -40,10 +29,26 @@ namespace Facticus.UI
             }
         }
         
+        public static WindowsManager GetOrCreate()
+        {
+#if UNITY_EDITOR
+            if (Instance == null)
+            {
+                var manager = CreateInstance<WindowsManager>();
+                var path = "Assets/WindowsManager.asset";
+                AssetDatabase.CreateAsset(manager, path);
+                Debug.Log($"Windows Manager created at {path}", manager);
+            }
+#endif
+            
+            return Instance;
+        }
+        
         private WindowInstance GetWindowsInstance(GameObject windowPrefab)
         {
             if (!TryGetWindowInstance(windowPrefab, out var window))
             {
+                var transform = GetParentTransform(windowPrefab);
                 var instance = Instantiate(windowPrefab, transform);
                 window = new WindowInstance()
                 {
@@ -56,6 +61,17 @@ namespace Facticus.UI
             }
 
             return window;
+        }
+
+        private Transform GetParentTransform(GameObject windowPrefab)
+        {
+            if (!_defaultParentTransform)
+            {
+                _defaultParentTransform = new GameObject("UI Windows").transform;
+                DontDestroyOnLoad(_defaultParentTransform);
+            }
+
+            return _defaultParentTransform;
         }
 
         public bool TryGetWindowInstance(GameObject windowPrefab, out WindowInstance window)
@@ -132,11 +148,11 @@ namespace Facticus.UI
             
             if (desiredStatus == WindowStatus.Open)
             {
-                await TransitionToOpenStatus(instance, destroyCancellationToken);
+                await TransitionToOpenStatus(instance, Application.exitCancellationToken);
             }
             else if (desiredStatus == WindowStatus.Closed)
             {
-                await TransitionToCloseStatus(instance, destroyCancellationToken);
+                await TransitionToCloseStatus(instance, Application.exitCancellationToken);
             }
 
             if (instance.Status != instance.RequestedStatus)

@@ -6,7 +6,8 @@
   "unity": "2022.3",
   "unityRelease": "",
   "dependencies": {
-    "com.cysharp.unitask": "2.5.10"
+    "com.cysharp.unitask": "2.5.10",
+    "com.facticus.utils": "0.13.20"
   },
   "keywords": [],
   "author": {

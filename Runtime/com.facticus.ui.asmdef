@@ -3,6 +3,7 @@
     "rootNamespace": "Facticus",
     "references": [
         "GUID:375a2b2d1d3bd46ba98f8cd67b6afde6",
+        "GUID:c35c6d9084ba1a541868fbd8c50a585a",
         "GUID:683eb415c59a66c40b09d8cf1710d72f",
         "GUID:11a2306c728a4b843a652ec6c2f142bc",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",

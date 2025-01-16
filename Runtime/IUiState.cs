@@ -29,7 +29,7 @@ namespace Facticus.UI
 
         private static bool AreAllInStatus(this IUiState state, WindowStatus status)
         {
-            var manager = WindowsManager.Instance;
+            var manager = WindowsManager.GetOrCreate();
             foreach (var windowPrefab in state.GetWindowsPrefabs())
             {
                 var isInStatus = manager.GetStatus(windowPrefab) == status;
@@ -44,7 +44,7 @@ namespace Facticus.UI
         
         private static bool IsAnyInStatus(this IUiState state, WindowStatus status)
         {
-            var manager = WindowsManager.Instance;
+            var manager = WindowsManager.GetOrCreate();
             foreach (var windowPrefab in state.GetWindowsPrefabs())
             {
                 var isInStatus = manager.GetStatus(windowPrefab) == status;
@@ -59,7 +59,7 @@ namespace Facticus.UI
         
         public static void Open(this IUiState state, UiStateOpenInfo info)
         {
-            var windowsManager = WindowsManager.Instance;
+            var windowsManager = WindowsManager.GetOrCreate();
             
             if (info.CloseOther)
             {
@@ -78,7 +78,7 @@ namespace Facticus.UI
 
         public static void Open<T>(this IUiState state, T initializationData, UiStateOpenInfo info)
         {
-            var windowsManager = WindowsManager.Instance;
+            var windowsManager = WindowsManager.GetOrCreate();
             state.Open(info);
             foreach (var windowPrefab in state.GetWindowsPrefabs())
             {
@@ -186,12 +186,12 @@ namespace Facticus.UI
         /// </summary>
         public static void CloseGoBackHistory(this IUiState state)
         {
-            WindowsManager.Instance.CloseCurrentHistoryList();
+            WindowsManager.GetOrCreate().CloseCurrentHistoryList();
         }
 
         public static void Close(this IUiState state)
         {
-            WindowsManager.Instance.CloseAll(state.GetWindowsPrefabs());
+            WindowsManager.GetOrCreate().CloseAll(state.GetWindowsPrefabs());
         }
         
         /// <summary>
@@ -222,7 +222,7 @@ namespace Facticus.UI
         private static async UniTask<T> WaitResult<T>(this IUiState state, CancellationToken ct)
         {
             var firstPrefab = state.GetWindowsPrefabs()[0];  // only supports getting a result from the first window
-            if (WindowsManager.Instance.TryGetWindowInstance(firstPrefab, out var windowInstance))
+            if (WindowsManager.GetOrCreate().TryGetWindowInstance(firstPrefab, out var windowInstance))
             {
                 if (windowInstance.TryGetWindowInterface<IWindowWithResult<T>>(out var windowWithResult))
                 {
