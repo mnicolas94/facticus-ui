@@ -1,0 +1,17 @@
+fileFormatVersion: 2
+guid: 13cb60b5d7ea4e70a391e8a316111aa0
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - _canvasPrefab: {fileID: 3375921600045301104, guid: 8b9ea1599097a984aa9bc6c998848fd7, type: 3}
+  - _textPrefab: {fileID: 2508306190537183347, guid: 48dd10685bd30be4eae02df89dd8ac3c, type: 3}
+  - _textButtonPrefab: {fileID: 8045854036189651785, guid: 64b3215b625230a4aad9332603646aef, type: 3}
+  - _iconButtonPrefab: {fileID: 3541771480652211499, guid: 7c3ac87507804774ab254b2d08848ec9, type: 3}
+  - _loadingIcon: {fileID: 8612269970597310763, guid: bc8f7ec75a8376c4687cd5ba04c59fb6, type: 3}
+  - _baseButtonPrefab: {fileID: 1636869753214669076, guid: 81c2d0a4a64e65a4583a70431c217ff4, type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
