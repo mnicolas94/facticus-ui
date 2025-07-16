@@ -33,7 +33,7 @@ namespace Facticus.UI.Popups
             try
             {
                 var backButtonTask = AsyncUtils.WaitPressBackButton(linkedCt);
-                var pressedButtonsTask = AsyncUtils.WaitFirstButtonPressedAsync(linkedCt, _buttonsArray);
+                var pressedButtonsTask = AsyncUtils.WaitFirstButtonPressedAsync(linkedCt, _buttonsArray).Preserve();
                 
                 _tasksArray[0] = backButtonTask;
                 _tasksArray[1] = pressedButtonsTask;
