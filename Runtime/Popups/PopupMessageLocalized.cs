@@ -6,7 +6,7 @@ using UnityEngine.Localization.Components;
 
 namespace Facticus.UI.Popups
 {
-    [AddComponentMenu("Facticus.UI/Popups/Message Localized")]
+    [AddComponentMenu("Facticus.UI/Popups/Popup Localized Message")]
     public class PopupMessageLocalized : PopupSimple, IWindowInitializable<LocalizedString>
     {
         [SerializeField] private LocalizeStringEvent _text;

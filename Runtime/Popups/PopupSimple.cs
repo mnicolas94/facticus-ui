@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace Facticus.UI.Popups
 {
-    [AddComponentMenu("Facticus.UI/Popups/Simple")]
+    [AddComponentMenu("Facticus.UI/Popups/Popup Simple")]
     public class PopupSimple : MonoBehaviour, IWindowPopup
     {
         [SerializeField] private List<Button> _closeButtons;

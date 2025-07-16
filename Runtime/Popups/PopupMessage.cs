@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Facticus.UI.Popups
 {
-    [AddComponentMenu("Facticus.UI/Popups/Message")]
+    [AddComponentMenu("Facticus.UI/Popups/Popup Message")]
     public class PopupMessage : PopupSimple, IWindowInitializable<string>
     {
         [SerializeField] private TextMeshProUGUI _text;

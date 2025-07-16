@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 namespace Facticus.UI.Popups
 {
-    [AddComponentMenu("Facticus.UI/Popups/Popup Boolean (Yes/No)")]
+    [AddComponentMenu("Facticus.UI/Popups/Popup Boolean (e.g. Yes-No)")]
     public class PopupBoolean : MonoBehaviour, IWindowWithResult<bool>
     {
         [SerializeField] private Button _affirmativeButton;
