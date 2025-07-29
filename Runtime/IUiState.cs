@@ -93,7 +93,7 @@ namespace Facticus.UI
         }
         
         /// <summary>
-        /// Open a UiState that has a <see cref="IWindowPopup"/> window and will close automatically after
+        /// Open a UiState that has a <see cref="IWindowPopup"/> component and will close automatically after
         /// <see cref="IWindowPopup.WaitPopup"/> ends. Useful for popups.
         /// </summary>
         /// <param name="info"></param>
@@ -113,7 +113,7 @@ namespace Facticus.UI
         }
         
         /// <summary>
-        /// Same as <see cref="OpenAsPopup"/> but the window can be initialized as well.
+        /// Same as <see cref="OpenAsPopup"/> but the window can be initialized with an argument as well.
         /// </summary>
         /// <param name="initializationData"></param>
         /// <param name="info"></param>
@@ -135,7 +135,7 @@ namespace Facticus.UI
         
         /// <summary>
         /// Open a UiState that has a <see cref="IWindowWithResult{T}"/> window and will close automatically after
-        /// the result is available. Useful for popups.
+        /// the result is available. Useful for popups that return a result.
         /// </summary>
         /// <param name="info"></param>
         /// <param name="ct"></param>
