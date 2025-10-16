@@ -211,6 +211,14 @@ namespace Facticus.UI
             }
         }
 
+        public static async UniTask WaitUntilOpen(this IUiState state, CancellationToken ct)
+        {
+            while (!state.IsOpen() && !ct.IsCancellationRequested)
+            {
+                await UniTask.Yield();
+            }
+        }
+        
         public static async UniTask WaitUntilClose(this IUiState state, CancellationToken ct)
         {
             while (!state.IsClosed() && !ct.IsCancellationRequested)
