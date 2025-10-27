@@ -36,7 +36,7 @@ namespace Facticus.UI.Utils
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
+                    Debug.LogError(e);
                 }
                 _popupsTaskQueue.RemoveAt(0);
             }
