@@ -6,6 +6,7 @@ using Facticus.UI.WindowInterfaces;
 using UnityEditor;
 #endif
 using UnityEngine;
+using UnityEngine.Pool;
 using Utils;
 
 namespace Facticus.UI
@@ -186,7 +187,7 @@ namespace Facticus.UI
             }
         }
 
-        public void OpenNewHistoryList()
+        public void OpenNewHistoryList(bool closeCurrent)
         {
             // store current windows in temporal list to close them after we open a new history list
             var currentOpenedWindows = CurrentOpenedWindows;
@@ -194,15 +195,19 @@ namespace Facticus.UI
             // add empty history list first
             _openedWindowsHistory.Add(new List<GameObject>());
             
-            // close currently opened windows.
-            // they won't be removed from the history since the current list is the new one
-            CloseAll(currentOpenedWindows);
+            if (closeCurrent)
+            {
+                // close currently opened windows.
+                // they won't be removed from the history since the current list is the new one
+                CloseAll(currentOpenedWindows);
+            }
         }
 
         public void CloseCurrentHistoryList()
         {
             // create a temporal list to avoid modifying CurrenOpenedWindows list when a window is closed
-            var temp = new List<GameObject>(CurrentOpenedWindows);
+            using var _ = ListPool<GameObject>.Get(out var temp);
+            temp.AddRange(CurrentOpenedWindows);
             // close current history list
             CloseAll(temp);
 

@@ -59,6 +59,15 @@ namespace Facticus.UI
                 KeepHistory = false,
             });
         }
+        
+        public void OpenKeepHistory()
+        {
+            ((IUiState)this).Open(new UiStateOpenInfo()
+            {
+                CloseOther = false,
+                KeepHistory = true,
+            });
+        }
 
         public void OpenCloseOthersKeepHistory()
         {

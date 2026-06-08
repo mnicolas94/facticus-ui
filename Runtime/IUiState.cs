@@ -65,12 +65,16 @@ namespace Facticus.UI
             {
                 if (info.KeepHistory)
                 {
-                    windowsManager.OpenNewHistoryList();
+                    windowsManager.OpenNewHistoryList(true);
                 }
                 else
                 {
                     windowsManager.CloseOthers(state.GetWindowsPrefabs());
                 }
+            }
+            else if (info.KeepHistory)
+            {
+                windowsManager.OpenNewHistoryList(false);
             }
             
             windowsManager.OpenAll(state.GetWindowsPrefabs());
