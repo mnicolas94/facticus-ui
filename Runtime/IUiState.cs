@@ -205,7 +205,7 @@ namespace Facticus.UI
         /// <param name="info"></param>
         private static void Close(IUiState state, UiStateOpenInfo info)
         {
-            if (info.CloseOther && info.KeepHistory)
+            if (info.KeepHistory)
             {
                 state.CloseGoBackHistory();
             }
